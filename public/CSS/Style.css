@@ -337,17 +337,18 @@ html {
     }
     
     .server__info-stats {
-        flex-direction: column;
+        flex-direction: row;
         gap: 15px;
         margin: 10px 0;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: space-between;
     }
     
     .server__stats {
         flex-wrap: wrap;
         gap: 8px;
-        width: 100%;
         justify-content: flex-start;
+        order: 1;
     }
     
     .server__stat {
@@ -359,11 +360,11 @@ html {
     
     .server__players {
         font-size: 14px;
-        justify-content: flex-start;
-        width: 100%;
+        justify-content: flex-end;
         display: flex;
         align-items: center;
         gap: 5px;
+        order: 2;
     }
     
     .server__progress {
@@ -391,13 +392,15 @@ html {
     
     .server__info-stats {
         gap: 12px;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
     }
     
     .server__stats {
         gap: 6px;
-        width: 100%;
         justify-content: flex-start;
+        order: 1;
     }
     
     .server__stat {
@@ -409,11 +412,11 @@ html {
     
     .server__players {
         font-size: 13px;
-        justify-content: flex-start;
-        width: 100%;
+        justify-content: flex-end;
         display: flex;
         align-items: center;
         gap: 5px;
+        order: 2;
     }
     
     .server__progress {
@@ -665,13 +668,15 @@ html {
     
     .server__info-stats {
         gap: 10px;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
     }
     
     .server__stats {
         gap: 4px;
-        width: 100%;
         justify-content: flex-start;
+        order: 1;
     }
     
     .server__stat {
@@ -685,11 +690,11 @@ html {
     
     .server__players {
         font-size: 12px;
-        justify-content: flex-start;
-        width: 100%;
+        justify-content: flex-end;
         display: flex;
         align-items: center;
         gap: 5px;
+        order: 2;
     }
     
     .server__progress {
