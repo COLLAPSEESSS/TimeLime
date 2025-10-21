@@ -129,37 +129,189 @@ export default function Home() {
       }
     };
 
-    // Initialize scroll animations
-    const root = document.querySelector('.system__container');
-    if (root) {
-      const revealEls = root.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const target = entry.target;
-          if (entry.isIntersecting) {
-            target.classList.add('is-visible');
-            if (target.classList.contains('title__content')) {
-              root.classList.add('bg-visible');
-            }
-          } else {
-            setTimeout(() => {
-              if (!entry.isIntersecting) {
-                target.classList.remove('is-visible');
-                if (target.classList.contains('title__content')) {
-                  root.classList.remove('bg-visible');
-                }
+    // Initialize Bootstrap ScrollSpy
+    class ScrollSpy {
+      constructor(element, config = {}) {
+        this._element = element;
+        this._config = {
+          offset: null,
+          rootMargin: '0px 0px -25%',
+          smoothScroll: false,
+          target: null,
+          threshold: [0.1, 0.5, 1],
+          ...config
+        };
+        
+        this._targetLinks = new Map();
+        this._observableSections = new Map();
+        this._rootElement = getComputedStyle(this._element).overflowY === 'visible' ? null : this._element;
+        this._activeTarget = null;
+        this._observer = null;
+        this._previousScrollData = {
+          visibleEntryTop: 0,
+          parentScrollTop: 0
+        };
+        
+        this.refresh();
+      }
+
+      refresh() {
+        this._initializeTargetsAndObservables();
+        this._maybeEnableSmoothScroll();
+
+        if (this._observer) {
+          this._observer.disconnect();
+        } else {
+          this._observer = this._getNewObserver();
+        }
+
+        for (const section of this._observableSections.values()) {
+          this._observer.observe(section);
+        }
+      }
+
+      dispose() {
+        if (this._observer) {
+          this._observer.disconnect();
+        }
+      }
+
+      _maybeEnableSmoothScroll() {
+        if (!this._config.smoothScroll) {
+          return;
+        }
+
+        const targetLinks = document.querySelectorAll('[href]');
+        targetLinks.forEach(link => {
+          link.addEventListener('click', (event) => {
+            const observableSection = this._observableSections.get(event.target.hash);
+            if (observableSection) {
+              event.preventDefault();
+              const root = this._rootElement || window;
+              const height = observableSection.offsetTop - this._element.offsetTop;
+              if (root.scrollTo) {
+                root.scrollTo({ top: height, behavior: 'smooth' });
+                return;
               }
-            }, 100);
+              root.scrollTop = height;
+            }
+          });
+        });
+      }
+
+      _getNewObserver() {
+        const options = {
+          root: this._rootElement,
+          threshold: this._config.threshold,
+          rootMargin: this._config.rootMargin
+        };
+
+        return new IntersectionObserver(entries => this._observerCallback(entries), options);
+      }
+
+      _observerCallback(entries) {
+        const targetElement = entry => this._targetLinks.get(`#${entry.target.id}`);
+        const activate = entry => {
+          this._previousScrollData.visibleEntryTop = entry.target.offsetTop;
+          this._process(targetElement(entry));
+        };
+
+        const parentScrollTop = (this._rootElement || document.documentElement).scrollTop;
+        const userScrollsDown = parentScrollTop >= this._previousScrollData.parentScrollTop;
+        this._previousScrollData.parentScrollTop = parentScrollTop;
+
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            this._activeTarget = null;
+            this._clearActiveClass(targetElement(entry));
+            continue;
+          }
+
+          const entryIsLowerThanPrevious = entry.target.offsetTop >= this._previousScrollData.visibleEntryTop;
+          
+          if (userScrollsDown && entryIsLowerThanPrevious) {
+            activate(entry);
+            if (!parentScrollTop) {
+              return;
+            }
+            continue;
+          }
+
+          if (!userScrollsDown && !entryIsLowerThanPrevious) {
+            activate(entry);
+          }
+        }
+      }
+
+      _initializeTargetsAndObservables() {
+        this._targetLinks = new Map();
+        this._observableSections = new Map();
+
+        const targetLinks = document.querySelectorAll('[href]');
+
+        for (const anchor of targetLinks) {
+          if (!anchor.hash) {
+            continue;
+          }
+
+          const observableSection = document.querySelector(decodeURI(anchor.hash));
+
+          if (observableSection && this._isVisible(observableSection)) {
+            this._targetLinks.set(decodeURI(anchor.hash), anchor);
+            this._observableSections.set(anchor.hash, observableSection);
+          }
+        }
+      }
+
+      _isVisible(element) {
+        return element.offsetWidth > 0 && element.offsetHeight > 0;
+      }
+
+      _process(target) {
+        if (this._activeTarget === target) {
+          return;
+        }
+
+        this._clearActiveClass(document.body);
+        this._activeTarget = target;
+        if (target) {
+          target.classList.add('active');
+        }
+      }
+
+      _clearActiveClass(parent) {
+        const activeNodes = parent.querySelectorAll('.active');
+        for (const node of activeNodes) {
+          node.classList.remove('active');
+        }
+      }
+    }
+
+    // Initialize ScrollSpy for system requirements
+    const systemContainer = document.querySelector('.system__container');
+    if (systemContainer) {
+      const scrollSpy = new ScrollSpy(systemContainer, {
+        rootMargin: '0px 0px -20% 0px',
+        threshold: [0.1, 0.5, 1]
+      });
+
+      // Add reveal animations
+      const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            if (entry.target.classList.contains('title__content')) {
+              systemContainer.classList.add('bg-visible');
+            }
           }
         });
       }, {
-        root: null,
         threshold: 0.2,
         rootMargin: '0px 0px -20% 0px'
       });
 
-      revealEls.forEach((el) => observer.observe(el));
+      revealEls.forEach((el) => revealObserver.observe(el));
     }
 
     // Initialize servers
