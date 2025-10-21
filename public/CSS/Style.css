@@ -221,7 +221,7 @@ html {
     border-radius: var(--border-radius);
     transition: all 0.2s ease;
     flex: 0 0 calc(25% - 30px);
-    min-width: 300px;
+    min-width: 50px;
 }
 
 .server__inner:hover {
