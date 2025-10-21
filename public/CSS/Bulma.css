@@ -1,0 +1,18 @@
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: var(--color-1);
+}
+
+i {
+    color: var(--color-1);
+}
+
+@media screen and (min-width: 1408px) {
+    .container:not(.is-max-desktop):not(.is-max-widescreen) {
+        max-width: 1430px;
+    }
+}

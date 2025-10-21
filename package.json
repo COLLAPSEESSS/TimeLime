@@ -1,0 +1,23 @@
+{
+  "name": "calypso-rust-site",
+  "version": "1.0.0",
+  "description": "CALYPSO RUST - Сервер RUST на 236/177 DEV",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "axios": "^1.12.2"
+  },
+  "keywords": [
+    "rust",
+    "game",
+    "server"
+  ],
+  "author": "Calypso Rust Team",
+  "license": "MIT"
+}
