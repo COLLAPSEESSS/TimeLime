@@ -220,7 +220,7 @@ html {
     padding: 25px;
     border-radius: var(--border-radius);
     transition: all 0.2s ease;
-    flex: 0 0 calc(25% - 30px);
+    flex: 0 0 auto;
     min-width: 250px;
 }
 
@@ -295,12 +295,14 @@ html {
 .container.servers {
     position: static;
     display: flex;
-    flex-direction: column;
-    gap: 40px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 20px;
+    justify-content: center;
 }
 
 @media screen and (max-width: 768px) {
