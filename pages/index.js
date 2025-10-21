@@ -493,17 +493,18 @@ export default function Home() {
     // Initialize servers list
     fetchServers();
 
-    // Load other scripts
-    const scripts = [
-      '/JS/Burger.js'
-    ];
-    
-    scripts.forEach(src => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.async = true;
-      document.body.appendChild(script);
-    });
+    // Initialize burger menu
+    const burger = document.querySelector('.header__burger');
+    const nav = document.querySelector('.header__nav');
+    const body = document.body;
+
+    if (burger && nav) {
+      burger.addEventListener('click', function() {
+        burger.classList.toggle('active');
+        nav.classList.toggle('active');
+        body.classList.toggle('lock');
+      });
+    }
 
     // Cleanup function
     return () => {
