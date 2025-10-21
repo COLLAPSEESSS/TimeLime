@@ -342,32 +342,25 @@ export default function Home() {
         threshold: [0.1, 0.5, 1]
       });
 
-      // Add reveal animations with state tracking to prevent infinite loops
+      // Add reveal animations
       const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
-      const animationStates = new Map(); // Track animation states
-      
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          const element = entry.target;
-          const isTitleContent = element.classList.contains('title__content');
-          const currentState = animationStates.get(element) || { hasAnimated: false, isVisible: false };
-          
-          if (entry.isIntersecting && !currentState.hasAnimated) {
-            // Element is entering viewport for the first time
-            element.classList.add('is-visible');
-            animationStates.set(element, { hasAnimated: true, isVisible: true });
-            
-            if (isTitleContent) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            if (entry.target.classList.contains('title__content')) {
               systemContainer.classList.add('bg-visible');
             }
-          } else if (!entry.isIntersecting && currentState.isVisible) {
-            // Element is leaving viewport - only hide if it was visible
-            element.classList.remove('is-visible');
-            animationStates.set(element, { hasAnimated: currentState.hasAnimated, isVisible: false });
-            
-            if (isTitleContent) {
-              systemContainer.classList.remove('bg-visible');
-            }
+          } else {
+            // Добавляем задержку перед скрытием для плавности
+            setTimeout(() => {
+              if (!entry.isIntersecting) {
+                entry.target.classList.remove('is-visible');
+                if (entry.target.classList.contains('title__content')) {
+                  systemContainer.classList.remove('bg-visible');
+                }
+              }
+            }, 100);
           }
         });
       }, {
@@ -375,10 +368,7 @@ export default function Home() {
         rootMargin: '0px 0px -20% 0px'
       });
 
-      revealEls.forEach((el) => {
-        animationStates.set(el, { hasAnimated: false, isVisible: false });
-        revealObserver.observe(el);
-      });
+      revealEls.forEach((el) => revealObserver.observe(el));
     }
 
     // Initialize servers
