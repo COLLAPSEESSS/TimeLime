@@ -303,6 +303,13 @@ html {
     padding: 0 20px;
 }
 
+@media screen and (max-width: 768px) {
+    .container.servers {
+        padding: 0;
+        max-width: 100%;
+    }
+}
+
 .main {
     position: relative;
 }
@@ -311,6 +318,13 @@ html {
     .servers {
         margin: 0 auto;
         max-width: 800px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container.servers {
+        padding: 0;
+        max-width: 100%;
     }
 }
 
@@ -375,6 +389,11 @@ html {
 }
 
 @media screen and (max-width: 480px) {
+    .container.servers {
+        padding: 0;
+        max-width: 100%;
+    }
+    
     .servers {
         padding: 0;
         margin: 15px auto;
@@ -649,6 +668,11 @@ html {
     .main__background-text {
         font-size: 200px;
         top: 34.5%;
+    }
+
+    .container.servers {
+        padding: 0;
+        max-width: 100%;
     }
 
     .servers {
