@@ -69,6 +69,8 @@ if (typeof window !== 'undefined') {
 
 export default function Home() {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     // Initialize preloader
     let preloaderStartTime = new Date().getTime();
     const MIN_PRELOADER_TIME = 500;
