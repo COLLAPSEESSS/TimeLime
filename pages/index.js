@@ -66,54 +66,53 @@ if (typeof window !== 'undefined') {
   window.connectToServer = copyTextToClipboard;
 }
 
-// Initialize preloader immediately (like in original)
-let preloaderStartTime = new Date().getTime();
-const MIN_PRELOADER_TIME = 500;
-
-class Preloader {
-  constructor() {
-    this.preloader = document.createElement('div');
-    this.preloader.className = 'preloader';
-    this.preloader.innerHTML = `
-      <div class="preloader__content">
-        <div class="preloader__spinner"></div>
-        <div class="preloader__text">Загрузка серверов...</div>
-      </div>
-    `;
-    document.body.appendChild(this.preloader);
-  }
-
-  hide() {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
-    
-    this.preloader.classList.add('preloader--hidden');
-    setTimeout(() => {
-      this.preloader.remove();
-    }, 500);
-  }
-}
-
-const preloader = new Preloader();
-
-// Function to hide preloader with minimum time
-function hidePreloaderWithMinTime() {
-  const currentTime = new Date().getTime();
-  const elapsedTime = currentTime - preloaderStartTime;
-  
-  if (elapsedTime >= MIN_PRELOADER_TIME) {
-    preloader.hide();
-  } else {
-    const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
-    setTimeout(() => {
-      preloader.hide();
-    }, remainingTime);
-  }
-}
-
 export default function Home() {
   useEffect(() => {
+    // Initialize preloader with timing
+    let preloaderStartTime = new Date().getTime();
+    const MIN_PRELOADER_TIME = 500;
+    
+    class Preloader {
+      constructor() {
+        this.preloader = document.createElement('div');
+        this.preloader.className = 'preloader';
+        this.preloader.innerHTML = `
+          <div class="preloader__content">
+            <div class="preloader__spinner"></div>
+            <div class="preloader__text">Загрузка серверов...</div>
+          </div>
+        `;
+        document.body.appendChild(this.preloader);
+      }
+
+      hide() {
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+        }
+        
+        this.preloader.classList.add('preloader--hidden');
+        setTimeout(() => {
+          this.preloader.remove();
+        }, 500);
+      }
+    }
+
+    const preloader = new Preloader();
+    
+    // Function to hide preloader with minimum time
+    function hidePreloaderWithMinTime() {
+      const currentTime = new Date().getTime();
+      const elapsedTime = currentTime - preloaderStartTime;
+      
+      if (elapsedTime >= MIN_PRELOADER_TIME) {
+        preloader.hide();
+      } else {
+        const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
+        setTimeout(() => {
+          preloader.hide();
+        }, remainingTime);
+      }
+    }
     // Initialize modal functionality
     function openModal($el) {
       $el.classList.add('is-active');
