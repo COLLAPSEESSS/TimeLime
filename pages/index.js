@@ -49,48 +49,21 @@ function ShowNotification(message, type = 'success', duration = 2000, iconSvg = 
   }, duration);
 }
 
-// Функция для копирования IP
-function copyToClipboard(text) {
-  return new Promise((resolve, reject) => {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text)
-        .then(() => resolve())
-        .catch(reject);
-    } else {
-      try {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        textArea.style.top = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        document.execCommand('copy');
-        textArea.remove();
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    }
-  });
-}
-
-// Функция для подключения к серверу
-async function connectToServer(connectString) {
+// Функция для копирования текста в буфер обмена
+const copyTextToClipboard = async (text) => {
   try {
-    await copyToClipboard(connectString);
+    await navigator.clipboard.writeText(text);
+    console.log('Текст успешно скопирован в буфер обмена!');
     ShowNotification("IP-адрес скопирован!", "success", 2000, "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z");
-  } catch (error) {
-    console.error('Ошибка при копировании:', error);
+  } catch (err) {
+    console.error('Ошибка:', err);
     ShowNotification("Ошибка при копировании IP", "error", 2000);
   }
-}
+};
 
-// Делаем функции доступными глобально
+// Делаем функцию доступной глобально
 if (typeof window !== 'undefined') {
-  window.connectToServer = connectToServer;
-  window.copyToClipboard = copyToClipboard;
+  window.connectToServer = copyTextToClipboard;
 }
 
 export default function Home() {
