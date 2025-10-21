@@ -342,30 +342,20 @@ export default function Home() {
         threshold: [0.1, 0.5, 1]
       });
 
-      // Add reveal animations - show once when scrolling down, hide when scrolling up
+      // Add reveal animations
       const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
-      let hasBeenVisible = false;
-      
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasBeenVisible) {
-            // Show only when first entering viewport
+          if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
             if (entry.target.classList.contains('title__content')) {
               systemContainer.classList.add('bg-visible');
             }
-            hasBeenVisible = true;
-          } else if (!entry.isIntersecting && hasBeenVisible) {
-            // Hide when scrolling up and out of viewport
-            setTimeout(() => {
-              if (!entry.isIntersecting) {
-                entry.target.classList.remove('is-visible');
-                if (entry.target.classList.contains('title__content')) {
-                  systemContainer.classList.remove('bg-visible');
-                }
-                hasBeenVisible = false;
-              }
-            }, 100);
+          } else {
+            entry.target.classList.remove('is-visible');
+            if (entry.target.classList.contains('title__content')) {
+              systemContainer.classList.remove('bg-visible');
+            }
           }
         });
       }, {
