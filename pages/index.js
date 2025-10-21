@@ -68,6 +68,8 @@ if (typeof window !== 'undefined') {
 
 export default function Home() {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     // Initialize preloader with timing
     let preloaderStartTime = new Date().getTime();
     const MIN_PRELOADER_TIME = 500;
@@ -395,6 +397,7 @@ export default function Home() {
     function fetchFreshData() {
       const timeoutId = setTimeout(() => {
         console.log('Превышено время ожидания ответа от сервера (5 секунд). Перезагрузка страницы...');
+        hidePreloaderWithMinTime();
         window.location.reload();
       }, 5000);
       
