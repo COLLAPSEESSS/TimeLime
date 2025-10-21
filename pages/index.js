@@ -344,23 +344,40 @@ export default function Home() {
 
       // Add reveal animations
       const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
+      const titleElement = systemContainer.querySelector('.title__content');
+      let titleTimeout = null;
+      
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
+            
+            // Специальная логика для заголовка с debounce
             if (entry.target.classList.contains('title__content')) {
-              systemContainer.classList.add('bg-visible');
+              if (titleTimeout) {
+                clearTimeout(titleTimeout);
+              }
+              titleTimeout = setTimeout(() => {
+                systemContainer.classList.add('bg-visible');
+              }, 50);
             }
           } else {
             entry.target.classList.remove('is-visible');
+            
+            // Специальная логика для заголовка с debounce
             if (entry.target.classList.contains('title__content')) {
-              systemContainer.classList.remove('bg-visible');
+              if (titleTimeout) {
+                clearTimeout(titleTimeout);
+              }
+              titleTimeout = setTimeout(() => {
+                systemContainer.classList.remove('bg-visible');
+              }, 50);
             }
           }
         });
       }, {
-        threshold: 0.2,
-        rootMargin: '0px 0px -20% 0px'
+        threshold: 0.3, // Увеличиваем порог для более стабильной работы
+        rootMargin: '0px 0px -30% 0px' // Увеличиваем отступ для более четкого срабатывания
       });
 
       revealEls.forEach((el) => revealObserver.observe(el));
