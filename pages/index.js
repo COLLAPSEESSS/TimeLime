@@ -68,7 +68,10 @@ if (typeof window !== 'undefined') {
 
 export default function Home() {
   useEffect(() => {
-    // Initialize preloader
+    // Initialize preloader with timing
+    let preloaderStartTime = new Date().getTime();
+    const MIN_PRELOADER_TIME = 500;
+    
     class Preloader {
       constructor() {
         this.preloader = document.createElement('div');
@@ -95,6 +98,21 @@ export default function Home() {
     }
 
     const preloader = new Preloader();
+    
+    // Function to hide preloader with minimum time
+    function hidePreloaderWithMinTime() {
+      const currentTime = new Date().getTime();
+      const elapsedTime = currentTime - preloaderStartTime;
+      
+      if (elapsedTime >= MIN_PRELOADER_TIME) {
+        preloader.hide();
+      } else {
+        const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
+        setTimeout(() => {
+          preloader.hide();
+        }, remainingTime);
+      }
+    }
     // Initialize modal functionality
     function openModal($el) {
       $el.classList.add('is-active');
@@ -364,7 +382,7 @@ export default function Home() {
           try {
             const cachedData = JSON.parse(localCache);
             renderServers(cachedData);
-            preloader.hide();
+            hidePreloaderWithMinTime();
             console.log('Используем кэшированные данные для быстрого отображения');
             return;
           } catch (e) {
@@ -379,7 +397,6 @@ export default function Home() {
     function fetchFreshData() {
       const timeoutId = setTimeout(() => {
         console.log('Превышено время ожидания ответа от сервера (5 секунд). Перезагрузка страницы...');
-        preloader.hide();
         window.location.reload();
       }, 5000);
       
@@ -391,12 +408,12 @@ export default function Home() {
           localStorage.setItem('serversCacheMeta', JSON.stringify({ timestamp: new Date().getTime() }));
           
           renderServers(response.data);
-          preloader.hide();
+          hidePreloaderWithMinTime();
         })
         .catch(error => {
           clearTimeout(timeoutId);
           console.error('Ошибка при получении данных о серверах:', error);
-          preloader.hide();
+          hidePreloaderWithMinTime();
         });
     }
 
