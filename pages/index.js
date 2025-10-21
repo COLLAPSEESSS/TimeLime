@@ -346,9 +346,14 @@ export default function Home() {
       const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
       const titleElement = systemContainer.querySelector('.title__content');
       let titleTimeout = null;
+      let lastScrollY = window.scrollY;
       
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
+          const currentScrollY = window.scrollY;
+          const scrollingDown = currentScrollY > lastScrollY;
+          lastScrollY = currentScrollY;
+          
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
             
@@ -362,22 +367,25 @@ export default function Home() {
               }, 50);
             }
           } else {
-            entry.target.classList.remove('is-visible');
-            
-            // Специальная логика для заголовка с debounce
-            if (entry.target.classList.contains('title__content')) {
-              if (titleTimeout) {
-                clearTimeout(titleTimeout);
+            // Убираем класс только если скроллим вверх
+            if (!scrollingDown) {
+              entry.target.classList.remove('is-visible');
+              
+              // Специальная логика для заголовка с debounce
+              if (entry.target.classList.contains('title__content')) {
+                if (titleTimeout) {
+                  clearTimeout(titleTimeout);
+                }
+                titleTimeout = setTimeout(() => {
+                  systemContainer.classList.remove('bg-visible');
+                }, 50);
               }
-              titleTimeout = setTimeout(() => {
-                systemContainer.classList.remove('bg-visible');
-              }, 50);
             }
           }
         });
       }, {
-        threshold: 0.3, // Увеличиваем порог для более стабильной работы
-        rootMargin: '0px 0px -30% 0px' // Увеличиваем отступ для более четкого срабатывания
+        threshold: 0.3,
+        rootMargin: '0px 0px -30% 0px'
       });
 
       revealEls.forEach((el) => revealObserver.observe(el));
