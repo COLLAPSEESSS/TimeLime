@@ -68,6 +68,33 @@ if (typeof window !== 'undefined') {
 
 export default function Home() {
   useEffect(() => {
+    // Initialize preloader
+    class Preloader {
+      constructor() {
+        this.preloader = document.createElement('div');
+        this.preloader.className = 'preloader';
+        this.preloader.innerHTML = `
+          <div class="preloader__content">
+            <div class="preloader__spinner"></div>
+            <div class="preloader__text">Загрузка серверов...</div>
+          </div>
+        `;
+        document.body.appendChild(this.preloader);
+      }
+
+      hide() {
+        if (this.timeout) {
+          clearTimeout(this.timeout);
+        }
+        
+        this.preloader.classList.add('preloader--hidden');
+        setTimeout(() => {
+          this.preloader.remove();
+        }, 500);
+      }
+    }
+
+    const preloader = new Preloader();
     // Initialize modal functionality
     function openModal($el) {
       $el.classList.add('is-active');
@@ -304,6 +331,16 @@ export default function Home() {
             if (entry.target.classList.contains('title__content')) {
               systemContainer.classList.add('bg-visible');
             }
+          } else {
+            // Добавляем задержку перед скрытием для плавности
+            setTimeout(() => {
+              if (!entry.isIntersecting) {
+                entry.target.classList.remove('is-visible');
+                if (entry.target.classList.contains('title__content')) {
+                  systemContainer.classList.remove('bg-visible');
+                }
+              }
+            }, 100);
           }
         });
       }, {
@@ -327,7 +364,9 @@ export default function Home() {
           try {
             const cachedData = JSON.parse(localCache);
             renderServers(cachedData);
+            preloader.hide();
             console.log('Используем кэшированные данные для быстрого отображения');
+            return;
           } catch (e) {
             console.error('Ошибка при обработке кэша:', e);
           }
@@ -340,6 +379,7 @@ export default function Home() {
     function fetchFreshData() {
       const timeoutId = setTimeout(() => {
         console.log('Превышено время ожидания ответа от сервера (5 секунд). Перезагрузка страницы...');
+        preloader.hide();
         window.location.reload();
       }, 5000);
       
@@ -351,10 +391,12 @@ export default function Home() {
           localStorage.setItem('serversCacheMeta', JSON.stringify({ timestamp: new Date().getTime() }));
           
           renderServers(response.data);
+          preloader.hide();
         })
         .catch(error => {
           clearTimeout(timeoutId);
           console.error('Ошибка при получении данных о серверах:', error);
+          preloader.hide();
         });
     }
 
@@ -423,7 +465,6 @@ export default function Home() {
 
     // Load other scripts
     const scripts = [
-      '/JS/Preloader.js',
       '/JS/Burger.js'
     ];
     
