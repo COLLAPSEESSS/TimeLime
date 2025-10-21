@@ -1,815 +1,1639 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import Script from 'next/script';
+:root {
+    --bg-url: url('./Image/bg.png');
 
-// Функция для показа всплывающих уведомлений
-function ShowNotification(message, type = 'success', duration = 2000, iconSvg = null) {
-  // Удаляем предыдущее уведомление если оно есть
-  const existingNotification = document.querySelector('.notification');
-  if (existingNotification) {
-    existingNotification.remove();
-  }
-  
-  // Создаем элемент уведомления
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  
-  // Создаем иконку если передана SVG
-  let iconHTML = '';
-  if (iconSvg) {
-    iconHTML = `<svg class="notification-icon" viewBox="0 0 24 24" fill="currentColor">
-      <path d="${iconSvg}"/>
-    </svg>`;
-  }
-  
-  notification.innerHTML = `
-    ${iconHTML}
-    <span>${message}</span>
-  `;
-  
-  // Добавляем уведомление в DOM
-  document.body.appendChild(notification);
-  
-  // Показываем уведомление с анимацией
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 10);
-  
-  // Скрываем уведомление через указанное время
-  setTimeout(() => {
-    notification.classList.remove('show');
-    notification.classList.add('hide');
-    
-    // Удаляем элемент после завершения анимации
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
-  }, duration);
+    --font-small: 14px;
+    --font-medium: 18px;
+    --font-large: 24px;
+    --font-logo: 32px;
+    --font-title: 56px;
+
+    --font-weight-logo: 800;
+    --font-weight-server: 600;
+    --font-weight-link: 500;
+
+    --color-1: #000000;
+    --color-2: #E6AA04;
+    --color-3: #E6AA0470;
+    --color-4: #FFFFFF;
+
+    --border-radius: 12px;
 }
 
-// Функция для копирования текста в буфер обмена
-const copyTextToClipboard = async (text) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    console.log('Текст успешно скопирован в буфер обмена!');
-    ShowNotification("IP-адрес скопирован!", "success", 2000, "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z");
-  } catch (err) {
-    console.error('Ошибка:', err);
-    ShowNotification("Ошибка при копировании IP", "error", 2000);
-  }
-};
-
-// Делаем функцию доступной глобально
-if (typeof window !== 'undefined') {
-  window.connectToServer = copyTextToClipboard;
+body {
+    background-image: url('/Image/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0px 40px;
 }
 
-export default function Home() {
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.header__inner {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.header__left {
+    display: flex;
+    flex-direction: row;
+    gap: 120px;
+    align-items: center;
+}
+
+.header__logo h1 {
+    font-size: var(--font-logo);
+    font-weight: var(--font-weight-logo);
+    color: var(--color-1); 
+}
+
+.header__link {
+    font-size: var(--font-medium);
+    font-weight: var(--font-weight-link);
+    color: var(--color-1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.9;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.header__link:active {
+    transform: scale(0.95);
+}
+
+.header__link:hover {
+    opacity: 1;
+}
+
+.header__nav {
+    display: flex;
+    gap: 30px;
+}
+
+.header__social {
+    font-size: var(--font-large);
+    gap: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.fab {
+    opacity: 0.8 !important;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.fab:hover {
+    opacity: 1 !important;
+    transform: translateY(-2px);
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+.fasa {
+    color: var(--color-4);
+}
+
+.header__shop-btn {
+    padding: 10px 25px;
+    border: 2px solid var(--color-2);
+    border-radius: var(--border-radius);
+    font-size: var(--font-medium);
+    font-weight: var(--font-weight-link);
+    color: var(--color-1);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 20px var(--color-3);
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    transform: scale(1);
+}
+
+.header__shop-btn:hover {
+    opacity: 1;
+}
+
+.header__shop-btn:active {
+    transform: scale(0.95);
+}
+
+.main__content {
+    text-align: center;
+    padding: 180px 0 80px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+}
+
+.main__title {
+    font-size: var(--font-title);
+    font-weight: var(--font-weight-logo);
+    margin-bottom: 0px;
+    position: relative;
+    z-index: 2;
+    color: var(--color-1);
+}
+
+.main__background-text {
+    position: absolute;
+    top: 43.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 200px;
+    opacity: 0.1;
+    font-weight: 900;
+    z-index: 1;
+}
+
+.main__description {
+    font-size: var(--font-large);
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+    max-width: 675px;
+    text-align: center;
+    color: var(--color-1);
+}
+
+.main__buttons {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.main__download-btn {
+    background: var(--color-2);
+    color: var(--color-4);
+    border: none;
+    min-width: 250px;
+    display: flex;
+    min-height: 51px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius);
+    gap: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.main__download-btn:hover {
+    color: var(--color-4) !important;
+    transform: translateY(-2px);
+}
+
+.main__download-btn:active {
+    transform: scale(0.95);
+}
+
+.fa-solid {
+    color: var(--color-4);
+}
+
+.server__inner {
+    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.20);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    transition: all 0.2s ease;
+    flex: 0 0 calc(25% - 30px);
+    min-width: 450px;
+}
+
+.server__inner:hover {
+    transform: translateY(-2px);
+}
+
+.server__title {
+    font-size: var(--font-large);
+    font-weight: var(--font-weight-server);
+    color: var(--color-1);
+}
+
+.server__stats {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+}
+
+.server__stat {
+    font-size: var(--font-small);
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+
+.server__progress {
+    position: relative;
+    height: 20px;
+    border-radius: 5px;
+}
+
+.server__info-stats {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0px 10px 1px;
+    gap: 40px;
+}
+
+.server__players {
+    color: var(--color-1);
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-server);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.faha {
+    color: var(--color-1) !important;
+}
+
+.server__progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 5px;
+    z-index: 1;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.server__connect-btn {
+    transition: all 0.3s ease;
+}
+
+.server__connect-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(230, 170, 4, 0.4);
+}
+
+.container.servers {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.main {
+    position: relative;
+}
+
+@media screen and (max-width: 1200px) {
+    .servers {
+        margin: 0 auto;
+        max-width: 800px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .servers {
+        margin: 0 auto;
+        max-width: 100%;
+        padding: 0 10px;
+    }
     
-    // Initialize preloader with timing
-    let preloaderStartTime = new Date().getTime();
-    const MIN_PRELOADER_TIME = 500;
+    .main__content {
+        padding: 100px 0 40px;
+    }
     
-    class Preloader {
-      constructor() {
-        this.preloader = document.createElement('div');
-        this.preloader.className = 'preloader';
-        this.preloader.innerHTML = `
-          <div class="preloader__content">
-            <div class="preloader__spinner"></div>
-            <div class="preloader__text">Загрузка серверов...</div>
-          </div>
-        `;
-        document.body.appendChild(this.preloader);
-      }
-
-      hide() {
-        if (this.timeout) {
-          clearTimeout(this.timeout);
-        }
-        
-        this.preloader.classList.add('preloader--hidden');
-        setTimeout(() => {
-          this.preloader.remove();
-        }, 500);
-      }
+    .server__inner {
+        min-width: 100%;
+        padding: 20px;
+        margin-bottom: 15px;
     }
-
-    const preloader = new Preloader();
     
-    // Function to hide preloader with minimum time
-    function hidePreloaderWithMinTime() {
-      const currentTime = new Date().getTime();
-      const elapsedTime = currentTime - preloaderStartTime;
-      
-      if (elapsedTime >= MIN_PRELOADER_TIME) {
-        preloader.hide();
-      } else {
-        const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
-        setTimeout(() => {
-          preloader.hide();
-        }, remainingTime);
-      }
+    .server__title {
+        font-size: 18px;
+        margin-bottom: 10px;
     }
-    // Initialize modal functionality
-    function openModal($el) {
-      $el.classList.add('is-active');
-      document.documentElement.classList.add('is-clipped');
-      $el.style.opacity = '0';
-      setTimeout(() => {
-        $el.style.transition = 'opacity 0.3s ease';
-        $el.style.opacity = '1';
-      }, 10);
+    
+    .server__info-stats {
+        flex-direction: column;
+        gap: 15px;
+        margin: 10px 0;
+        align-items: flex-start;
     }
-
-    function closeModal($el) {
-      $el.style.opacity = '0';
-      setTimeout(() => {
-        $el.classList.remove('is-active');
-        document.documentElement.classList.remove('is-clipped');
-      }, 300);
+    
+    .server__stats {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+        justify-content: flex-start;
     }
-
-    function closeAllModals() {
-      (document.querySelectorAll('.modal') || []).forEach(($modal) => {
-        closeModal($modal);
-      });
+    
+    .server__stat {
+        font-size: 12px;
+        padding: 6px 10px;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
+    
+    .server__players {
+        font-size: 14px;
+        justify-content: flex-start;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .server__progress {
+        height: 15px;
+        margin-top: 10px;
+        width: 100%;
+    }
+}
 
-    // Initialize modal triggers
-    (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
-      const modal = $trigger.dataset.target;
-      const $target = document.getElementById(modal);
+@media screen and (max-width: 480px) {
+    .servers {
+        padding: 0 5px;
+        margin: 15px auto;
+    }
+    
+    .server__inner {
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .server__title {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    
+    .server__info-stats {
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .server__stats {
+        gap: 6px;
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .server__stat {
+        font-size: 11px;
+        padding: 4px 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .server__players {
+        font-size: 13px;
+        justify-content: flex-start;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .server__progress {
+        height: 12px;
+        width: 100%;
+    }
+}
 
-      $trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal($target);
-      });
-    });
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
 
-    // Initialize close buttons
-    (document.querySelectorAll('.modal-background, .modal .delete') || []).forEach(($close) => {
-      const $target = $close.closest('.modal');
+.preloader--hidden {
+    opacity: 0;
+}
 
-      $close.addEventListener('click', () => {
-        closeModal($target);
-      });
-    });
+.preloader__content {
+    text-align: center;
+}
 
-    // Initialize escape key handler
-    const handleEscape = (event) => {
-      if (event.keyCode === 27) {
-        closeAllModals();
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
+.preloader__spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #E6AA04;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
 
-    // Expose helper to close the main selection modal
-    window.closeMainModal = function() {
-      const mainModal = document.getElementById('download-modal');
-      if (mainModal) {
-        closeModal(mainModal);
-      }
-    };
+.preloader__text {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+}
 
-    // Initialize Bootstrap ScrollSpy
-    class ScrollSpy {
-      constructor(element, config = {}) {
-        this._element = element;
-        this._config = {
-          offset: null,
-          rootMargin: '0px 0px -25%',
-          smoothScroll: false,
-          target: null,
-          threshold: [0.1, 0.5, 1],
-          ...config
-        };
-        
-        this._targetLinks = new Map();
-        this._observableSections = new Map();
-        this._rootElement = getComputedStyle(this._element).overflowY === 'visible' ? null : this._element;
-        this._activeTarget = null;
-        this._observer = null;
-        this._previousScrollData = {
-          visibleEntryTop: 0,
-          parentScrollTop: 0
-        };
-        
-        this.refresh();
-      }
+.shop-btn {
+    display: none;
+}
 
-      refresh() {
-        this._initializeTargetsAndObservables();
-        this._maybeEnableSmoothScroll();
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
-        if (this._observer) {
-          this._observer.disconnect();
-        } else {
-          this._observer = this._getNewObserver();
-        }
-
-        for (const section of this._observableSections.values()) {
-          this._observer.observe(section);
-        }
-      }
-
-      dispose() {
-        if (this._observer) {
-          this._observer.disconnect();
-        }
-      }
-
-      _maybeEnableSmoothScroll() {
-        if (!this._config.smoothScroll) {
-          return;
-        }
-
-        const targetLinks = document.querySelectorAll('[href]');
-        targetLinks.forEach(link => {
-          link.addEventListener('click', (event) => {
-            const observableSection = this._observableSections.get(event.target.hash);
-            if (observableSection) {
-              event.preventDefault();
-              const root = this._rootElement || window;
-              const height = observableSection.offsetTop - this._element.offsetTop;
-              if (root.scrollTo) {
-                root.scrollTo({ top: height, behavior: 'smooth' });
-                return;
-              }
-              root.scrollTop = height;
-            }
-          });
-        });
-      }
-
-      _getNewObserver() {
-        const options = {
-          root: this._rootElement,
-          threshold: this._config.threshold,
-          rootMargin: this._config.rootMargin
-        };
-
-        return new IntersectionObserver(entries => this._observerCallback(entries), options);
-      }
-
-      _observerCallback(entries) {
-        const targetElement = entry => this._targetLinks.get(`#${entry.target.id}`);
-        const activate = entry => {
-          this._previousScrollData.visibleEntryTop = entry.target.offsetTop;
-          this._process(targetElement(entry));
-        };
-
-        const parentScrollTop = (this._rootElement || document.documentElement).scrollTop;
-        const userScrollsDown = parentScrollTop >= this._previousScrollData.parentScrollTop;
-        this._previousScrollData.parentScrollTop = parentScrollTop;
-
-        for (const entry of entries) {
-          if (!entry.isIntersecting) {
-            this._activeTarget = null;
-            this._clearActiveClass(targetElement(entry));
-            continue;
-          }
-
-          const entryIsLowerThanPrevious = entry.target.offsetTop >= this._previousScrollData.visibleEntryTop;
-          
-          if (userScrollsDown && entryIsLowerThanPrevious) {
-            activate(entry);
-            if (!parentScrollTop) {
-              return;
-            }
-            continue;
-          }
-
-          if (!userScrollsDown && !entryIsLowerThanPrevious) {
-            activate(entry);
-          }
-        }
-      }
-
-      _initializeTargetsAndObservables() {
-        this._targetLinks = new Map();
-        this._observableSections = new Map();
-
-        const targetLinks = document.querySelectorAll('[href]');
-
-        for (const anchor of targetLinks) {
-          if (!anchor.hash) {
-            continue;
-          }
-
-          const observableSection = document.querySelector(decodeURI(anchor.hash));
-
-          if (observableSection && this._isVisible(observableSection)) {
-            this._targetLinks.set(decodeURI(anchor.hash), anchor);
-            this._observableSections.set(anchor.hash, observableSection);
-          }
-        }
-      }
-
-      _isVisible(element) {
-        return element.offsetWidth > 0 && element.offsetHeight > 0;
-      }
-
-      _process(target) {
-        if (this._activeTarget === target) {
-          return;
-        }
-
-        this._clearActiveClass(document.body);
-        this._activeTarget = target;
-        if (target) {
-          target.classList.add('active');
-        }
-      }
-
-      _clearActiveClass(parent) {
-        const activeNodes = parent.querySelectorAll('.active');
-        for (const node of activeNodes) {
-          node.classList.remove('active');
-        }
-      }
+/* Мобильная версия */
+@media screen and (max-width: 1024px) {
+    body {
+        padding: 0px 20px;
     }
 
-    // Initialize ScrollSpy for system requirements
-    const systemContainer = document.querySelector('.system__container');
-    if (systemContainer) {
-      const scrollSpy = new ScrollSpy(systemContainer, {
-        rootMargin: '0px 0px -20% 0px',
-        threshold: [0.1, 0.5, 1]
-      });
-
-      // Add reveal animations
-      const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            if (entry.target.classList.contains('title__content')) {
-              systemContainer.classList.add('bg-visible');
-            }
-          } else {
-            // Добавляем задержку перед скрытием для плавности
-            setTimeout(() => {
-              if (!entry.isIntersecting) {
-                entry.target.classList.remove('is-visible');
-                if (entry.target.classList.contains('title__content')) {
-                  systemContainer.classList.remove('bg-visible');
-                }
-              }
-            }, 100);
-          }
-        });
-      }, {
-        threshold: 0.2,
-        rootMargin: '0px 0px -20% 0px'
-      });
-
-      revealEls.forEach((el) => revealObserver.observe(el));
+    .header__inner {
+        margin-top: 20px;
     }
 
-    // Initialize servers
-    function fetchServers() {
-      const localCache = localStorage.getItem('serversCache');
-      const cacheMeta = localStorage.getItem('serversCacheMeta');
-      
-      if (localCache && cacheMeta) {
-        const { timestamp } = JSON.parse(cacheMeta);
-        const now = new Date().getTime();
-        
-        if (now - timestamp < 300000) {
-          try {
-            const cachedData = JSON.parse(localCache);
-            renderServers(cachedData);
-            console.log('Используем кэшированные данные для быстрого отображения');
-          } catch (e) {
-            console.error('Ошибка при обработке кэша:', e);
-          }
-        }
-      }
-      
-      fetchFreshData();
+    .header__left {
+        gap: 30px;
     }
 
-    function fetchFreshData() {
-      const timeoutId = setTimeout(() => {
-        console.log('Превышено время ожидания ответа от сервера (5 секунд). Перезагрузка страницы...');
-        hidePreloaderWithMinTime();
-        window.location.reload();
-      }, 5000);
-      
-      axios.get('/api/server')
-        .then(response => {
-          clearTimeout(timeoutId);
-          
-          localStorage.setItem('serversCache', JSON.stringify(response.data));
-          localStorage.setItem('serversCacheMeta', JSON.stringify({ timestamp: new Date().getTime() }));
-          
-          renderServers(response.data);
-          hidePreloaderWithMinTime();
-        })
-        .catch(error => {
-          clearTimeout(timeoutId);
-          console.error('Ошибка при получении данных о серверах:', error);
-          hidePreloaderWithMinTime();
-        });
+    .header__nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        transition: all 0.3s ease;
+        z-index: 100;
     }
 
-    function renderServers(servers) {
-      const serversContainer = document.getElementById('servers');
-      if (!serversContainer) return;
-      
-      serversContainer.innerHTML = '';
-      
-      Object.values(servers).forEach(server => {
-        const playerCount = server.Players;
-        const maxPlayers = server.MaxPlayers;
-        const queue = server.Queue;
-        
-        const progressPercent = maxPlayers > 0 ? (playerCount / maxPlayers) * 100 : 0;
-        
-        let playersText = `${playerCount} / ${maxPlayers}`;
-        if (queue > 0) {
-          playersText += ` (+${queue})`;
-        }
-        
-        let tagsHTML = '';
-        if (server.Tag_1) {
-          tagsHTML += `<div class="server__stat" style="background: ${server.Stat_Style.Background}; border: 1px solid ${server.Stat_Style.Border}; color: ${server.Stat_Style.Color};">
-            <span>${server.Tag_1}</span>
-          </div>`;
-        }
-        
-        if (server.Tag_2) {
-          tagsHTML += `<div class="server__stat" style="background: ${server.Stat_Style.Background}; border: 1px solid ${server.Stat_Style.Border}; color: ${server.Stat_Style.Color};">
-            <span>${server.Tag_2}</span>
-          </div>`;
-        }
-        
-        if (server.Connect) {
-          tagsHTML += `<div class="server__stat server__connect-btn" onclick="connectToServer('${server.Connect}')" style="background: ${server.Stat_Style.Background}; border: 1px solid ${server.Stat_Style.Border}; color: ${server.Stat_Style.Color}; cursor: pointer;">
-            <span><i class="fas fa-play"></i></span>
-          </div>`;
-        }
-        
-        const serverHTML = `
-          <div class="server__inner">
-            <div class="server__left">
-              <div class="server__info">
-                <div class="server__title">${server.Name}</div>
-                <div class="server__info-stats">
-                  <div class="server__stats">
-                    ${tagsHTML}
-                  </div>
-                  <div class="server__players"><i class="fas fa-users faha"></i> ${playersText}</div>
-                </div>
-                <div class="server__progress" style="background: #00000030;">
-                  <div class="server__progress-bar" style="background: linear-gradient(270.00deg, ${server.Progress_Color.Start}, ${server.Progress_Color.End} 100%); width: ${progressPercent}%;"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        
-        serversContainer.innerHTML += serverHTML;
-      });
+    .header__nav.active {
+        right: 0;
     }
 
-    // Initialize servers list
-    fetchServers();
-
-    // Initialize burger menu
-    const burger = document.querySelector('.header__burger');
-    const nav = document.querySelector('.header__nav');
-    const body = document.body;
-
-    if (burger && nav) {
-      burger.addEventListener('click', function() {
-        burger.classList.toggle('active');
-        nav.classList.toggle('active');
-        body.classList.toggle('lock');
-      });
+    .header__link {
+        font-size: 24px;
+        color: var(--color-4);
     }
 
-    // Cleanup function
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, []);
+    .header__social--desktop {
+        display: none;
+    }
 
-  return (
-    <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="application-name" content="CALYPSO RUST - Сервер RUST на 236/177 DEV" />
-        <meta name="theme-color" content="#42aaff" />
-        <meta name="robots" content="index,follow" />
-        <meta name="keywords" content="rust, раст, 177 devblog, 236 devblog, 177, 177 devblog, 236, calypsorust, calypso rust, пиратка, пиратский раст, пиратский rust, старый раст, старый rust, rust для слабых компьютеров, оптимизация rust, rust low-end pc, rust low specs, rust для слабых пк" />
-        <meta name="description" content="Платформа для эффективной организации и управления рабочими процессами. Обеспечивает удобные инструменты для планирования, координации и мониторинга задач." />
-        <meta property="og:title" content="CALYPSO RUST - Сервер RUST на 236/177 DEV" />
-        <meta property="og:description" content="Бесплатный сервер RUST для комфортной игры на слабом железе" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://calypsoproject.gamestores.app/" />
-        <meta property="og:image" content="/Image/MainLogo.png" />
-        <meta property="og:site_name" content="CALYPSO RUST - Сервер RUST на 236/177 DEV" />
-        
-        <link rel="icon" type="image/png" href="/Image/MainLogo.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" />
-        <link rel="stylesheet" href="/CSS/Style.css" />
-        <link rel="stylesheet" href="/CSS/Bulma.css" />
-        
-        <title>CALYPSO RUST - Сервер RUST на 236/177 DEV</title>
-      </Head>
+    .header__social--mobile {
+        display: flex;
+    }
 
-      <Script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" strategy="beforeInteractive" />
+    .header__social--mobile .header__social-link {
+        font-size: 24px;
+    }
 
-      <header className="header">
-        <div className="container">
-          <div className="header__inner">
-            <div className="header__left">
-              <div className="header__logo">
-                <h1>CALYPSO RUST</h1>
-              </div>
-              <nav className="header__nav">
-                <a target="_blank" href="https://t.me/Qolach" className="header__link"><i className="fas fa-headset"></i> Тех-поддержка</a>
-                <a href="#" className="header__link js-modal-trigger header__link--desktop" data-target="download-modal"><i className="fas fa-play"></i> Начать играть</a>
-                <a target="_blank" href="https://calypsoproject.gamestores.app/" className="header__link shop-btn"><i className="fas fa-shopping-cart"></i> Магазин</a>
-                <div className="header__social header__social--mobile">
-                  <a target="_blank" href="https://vk.com/calypsorust" className="header__social-link"><i className="fab fa-vk"></i></a>
-                  <a target="_blank" href="https://discord.gg/kQzrwuS357" className="header__social-link"><i className="fab fa-discord"></i></a>
-                  <a target="_blank" href="https://t.me/calypsorust" className="header__social-link"><i className="fab fa-telegram"></i></a>
-                </div>
-              </nav>
-              <div className="header__social header__social--desktop">
-                <a target="_blank" href="https://vk.com/calypsorust" className="header__social-link"><i className="fab fa-vk"></i></a>
-                <a target="_blank" href="https://discord.gg/kQzrwuS357" className="header__social-link"><i className="fab fa-discord"></i></a>
-                <a target="_blank" href="https://t.me/calypsorust" className="header__social-link"><i className="fab fa-telegram"></i></a>
-              </div>
-            </div>
-            <div className="header__right">
-              <a target="_blank" href="https://calypsoproject.gamestores.app/" className="header__shop-btn"><i className="fas fa-shopping-cart"></i> Магазин</a>
-              <div className="header__burger">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+    .header__burger {
+        display: block;
+        position: relative;
+        width: 30px;
+        height: 20px;
+        cursor: pointer;
+        z-index: 101;
+    }
 
-      <main className="main">
-        <div className="container">
-          <div className="main__content">
-            <h1 className="main__title">
-              СТАРЫЙ RUST ЖДЁТ ТЕБЯ
-            </h1>
-            <div className="main__background-text">
-              RUST
-            </div>
-            <p className="main__description">
-              Покоряй мир ржавчины и радиации, объединяйся с игроками, рейди соседей и забирай их ресурсы
-            </p>
-            <div className="main__buttons">
-              <a href="#" className="main__download-btn js-modal-trigger" data-target="download-modal">
-                <i className="fas fa-download fasa"></i> Скачать клиент
-              </a>
-              <a href="#" className="main__download-btn js-modal-trigger" data-target="skins-modal">
-                <i className="fas fa-gun fasa"></i> Скачать скины
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="container servers" id="servers"></div>
+    .header__burger span {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: var(--color-1);
+        transition: all 0.3s ease;
+    }
 
-        <div className="system__container" id="system-req">
-          <div className="title__content reveal-top">
-            <p>СИСТЕМНЫЕ ТРЕБОВАНИЯ</p>
-          </div>
-          <div className="systems__content">
-            <div className="row g-2">
-              <div className="col reveal-left">
-                <p className="description sys">177 DEVBLOG</p>
-                <div className="block" id="system">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td className="td-1">Операционная система:</td>
-                        <td className="td-2">Windows 10, 11</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Процессор:</td>
-                        <td className="td-2">Intel Core 2 duo</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Видеокарта:</td>
-                        <td className="td-2">512мб VRAM</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Оперативная память:</td>
-                        <td className="td-2">4гб RAM</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Место на диске:</td>
-                        <td className="td-2">8гб HDD</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="col reveal-right">
-                <p className="description sys">236 DEVBLOG</p>
-                <div className="block">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td className="td-1">Операционная система:</td>
-                        <td className="td-2">Windows 10, 11</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Процессор:</td>
-                        <td className="td-2">Intel Core i3 6100F</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Видеокарта:</td>
-                        <td className="td-2">1гб VRAM</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Оперативная память:</td>
-                        <td className="td-2">6гб RAM</td>
-                      </tr>
-                      <tr>
-                        <td className="td-1">Место на диске:</td>
-                        <td className="td-2">30гб SSD</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="scroll-spacer"></div>
-      </main>
+    .header__burger span:nth-child(1) {
+        top: 0;
+    }
 
-      {/* Модальные окна */}
-      <div id="download-modal" className="modal">
-        <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">Выберите девблог для игры</p>
-            <button className="delete" aria-label="close"></button>
-          </header>
-          <section className="modal-card-body">
-            <div className="content">
-              <div className="body__containers">
-                <a href="#" className="container__a cont js-modal-trigger" data-target="dev177-modal" onClick={() => window.closeMainModal()}>
-                  <div className="dev__info">
-                    <h2>177 DEV</h2>
-                    <div className="dev__features">
-                      <span>Для слабых пк</span>
-                      <span>Версия 2017 года</span>
-                      <span>Для новичков</span>
-                      <span>Старая графика</span>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" className="container__b cont js-modal-trigger" data-target="dev236-modal" onClick={() => window.closeMainModal()}>
-                  <div className="dev__info">
-                    <h2>236 DEV</h2>
-                    <div className="dev__features">
-                      <span>Для средних пк</span>
-                      <span>Версия 2019 года</span>
-                      <span>Для опытных</span>
-                      <span>Графика лучше</span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
+    .header__burger span:nth-child(2) {
+        top: 9px;
+    }
 
-      <div id="dev177-modal" className="modal">
-        <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">177 DEVBLOG - Выберите способ</p>
-            <button className="delete" aria-label="close"></button>
-          </header>
-          <section className="modal-card-body">
-            <div className="content">
-              <div className="download-options">
-                <div className="download-option">
-                  <img src="/Image/site.png" alt="С сайта" />
-                  <p>С сайта</p>
-                  <a target="_blank" href="https://download" className="download-link" download></a>
-                </div>
-                <div className="download-option">
-                  <img src="/Image/google.png" alt="Google Disk" />
-                  <p>Google Disk</p>
-                  <a target="_blank" href="https://drive.google.com/file/" className="download-link" download></a>
-                </div>
-                <div className="download-option">
-                  <img src="/Image/yandex.png" alt="Я.Диск" />
-                  <p>Я.Диск</p>
-                  <a target="_blank" href="https://disk.yandex.ru/" className="download-link" download></a>
-                </div>
-              </div>
-              <p>Инструкция по установке</p>
-              <ol className="install-instructions">
-                <li>Скачайте файл, нажав на нужный сервис выше</li>
-                <li>Распакуйте архив в удобную папку (например, C:/CalypsoRust)</li>
-                <li>Запустите файл <strong>CalypsoLauncher.exe</strong> или <strong>RustClient.exe</strong></li>
-              </ol>
-            </div>
-          </section>
-        </div>
-      </div>
+    .header__burger span:nth-child(3) {
+        bottom: 0;
+    }
 
-      <div id="dev236-modal" className="modal">
-        <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">236 DEVBLOG - Выберите способ</p>
-            <button className="delete" aria-label="close"></button>
-          </header>
-          <section className="modal-card-body">
-            <div className="content">
-              <div className="download-options">
-                <div className="download-option">
-                  <img src="/Image/site.png" alt="С сайта" />
-                  <p>С сайта</p>
-                  <a target="_blank" href="https://download." className="download-link" download></a>
-                </div>
-                <div className="download-option">
-                  <img src="/Image/google.png" alt="Google Disk" />
-                  <p>Google Disk</p>
-                  <a target="_blank" href="https://drive.google.com/file/" className="download-link" download></a>
-                </div>
-                <div className="download-option">
-                  <img src="/Image/yandex.png" alt="Я.Диск" />
-                  <p>Я.Диск</p>
-                  <a target="_blank" href="https://disk." className="download-link" download></a>
-                </div>
-              </div>
-              <p>Инструкция по установке</p>
-              <ol className="install-instructions">
-                <li>Скачайте файл, нажав на нужный сервис выше</li>
-                <li>Распакуйте архив в удобную папку (например, C:/CalypsoRust)</li>
-                <li>Запустите файл <strong>CalypsoLauncher.exe</strong> или <strong>RustClient.exe</strong></li>
-              </ol>
-            </div>
-          </section>
-        </div>
-      </div>
+    .header__burger.active span:nth-child(1) {
+        transform: rotate(45deg);
+        top: 9px;
+    }
 
-      <div id="skins-modal" className="modal">
-        <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">Скачать скины</p>
-            <button className="delete" aria-label="close"></button>
-          </header>
-          <section className="modal-card-body">
-            <div className="content">
-              <p>Выберите удобный способ</p>
-              <div className="download-options">
-                <div className="download-option">
-                  <img src="/Image/site.png" alt="С сайта" />
-                  <p>С сайта</p>
-                  <a target="_blank" href="https://download" className="download-link" download></a>
-                </div>
-                <div className="download-option">
-                  <img src="/Image/google.png" alt="Google Disk" />
-                  <p>Google Disk</p>
-                  <a target="_blank" href="https://drive.google.com/file/" className="download-link" download></a>
-                </div>
-                <div className="download-option">
-                  <img src="/Image/yandex.png" alt="Я.Диск" />
-                  <p>Я.Диск</p>
-                  <a target="_blank" href="https://disk.yandex.ru/" className="download-link" download></a>
-                </div>
-              </div>
-              <p>Инструкция по установке</p>
-              <ol className="install-instructions">
-                <li>Скачайте файл, нажав на нужный сервис выше</li>
-                <li>Распакуйте архив в любую удобную папку</li>
-                <li>Перенесите папку <strong>workshop</strong> в папку с игрой</li>
-              </ol>
-            </div>
-          </section>
-        </div>
-      </div>
-    </>
-  );
+    .header__burger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .header__burger.active span:nth-child(3) {
+        transform: rotate(-45deg);
+        bottom: 9px;
+    }
+
+    .main__content {
+        padding: 100px 0;
+    }
+
+    .main__background-text {
+        font-size: 200px;
+        top: 34.5%;
+    }
+
+    .main__description {
+        font-size: 18px;
+        padding: 0 20px;
+    }
+
+    .main__buttons {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .server__inner {
+        min-width: 100%;
+    }
+
+    .header__social--desktop {
+        display: none;
+    }
+
+    .header__shop-btn {
+        display: none;
+    }
+
+    .header__social--mobile {
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header__logo h1 {
+        font-size: 24px;
+    }
+
+    .header__shop-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .main__title {
+        font-size: 36px;
+    }
+
+    .main__background-text {
+        font-size: 150px;
+        top: 32.5%;
+    }
+
+    .main__buttons {
+        width: 100%;
+    }
+
+    .install-instructions li {
+        font-size: 12px;
+    }
+
+    .download-option p {
+        font-size: 12px !important;
+    }
+
+    .download-options {
+        flex-direction: column;
+    }
+
+    .download-option {
+        width: auto !important;
+    }
+}
+
+@media screen and (max-width: 440px) {
+    .main__background-text {
+        font-size: 200px;
+        top: 34.5%;
+    }
+
+    .servers {
+        padding: 0;
+        margin: 10px auto;
+    }
+    
+    .server__inner {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .server__title {
+        font-size: 14px;
+        line-height: 1.2;
+    }
+    
+    .server__info-stats {
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .server__stats {
+        gap: 4px;
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .server__stat {
+        font-size: 10px;
+        padding: 3px 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .server__players {
+        font-size: 12px;
+        justify-content: flex-start;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .server__progress {
+        height: 10px;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1405px) {
+    .header__nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .shop-btn {
+        display: flex;
+    }
+
+    .fas {
+        color: #fff !important;
+    }
+
+    .header__nav.active {
+        left: 0;
+    }
+
+    .header__link {
+        font-size: 24px;
+        color: var(--color-4);
+    }
+
+    .header__social--desktop {
+        display: none;
+    }
+
+    .header__social--mobile {
+        display: flex;
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .header__social--mobile .header__social-link {
+        font-size: 32px;
+        color: var(--color-4);
+    }
+
+    .header__burger {
+        display: block;
+        position: relative;
+        width: 30px;
+        height: 20px;
+        cursor: pointer;
+        z-index: 101;
+    }
+
+    .header__burger span {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: var(--color-1);
+        transition: all 0.3s ease;
+    }
+
+    .header__burger span:nth-child(1) {
+        top: 0;
+    }
+
+    .header__burger span:nth-child(2) {
+        top: 9px;
+    }
+
+    .header__burger span:nth-child(3) {
+        bottom: 0;
+    }
+
+    .header__burger.active span:nth-child(1) {
+        transform: rotate(45deg);
+        top: 9px;
+    }
+
+    .header__burger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .header__burger.active span:nth-child(3) {
+        transform: rotate(-45deg);
+        bottom: 9px;
+    }
+
+    .header__shop-btn {
+        display: none;
+    }
+
+    .header__link--desktop {
+        display: none !important;
+    }
+
+    .header__play-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        background-color: var(--color-2);
+        color: var(--color-4) !important;
+        border-radius: var(--border-radius);
+        font-size: 14px;
+        font-weight: var(--font-weight-link);
+        transition: all 0.2s ease;
+        box-shadow: 0 0 10px var(--color-3);
+        margin-right: 15px;
+    }
+    
+    .header__play-btn i {
+        color: var(--color-4) !important;
+    }
+    
+    .header__play-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .header__play-btn:active {
+        transform: scale(0.95);
+    }
+}
+
+.header__social--mobile {
+    display: none;
+}
+
+.header__right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-direction: row-reverse;
+    margin-right: -10px;
+}
+
+.header__social--desktop {
+    display: flex;
+    gap: 20px;
+}
+
+.header__social--mobile {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.header__social--mobile .header__social-link {
+    font-size: 24px;
+}
+
+.modal {
+    transition: opacity 0.3s ease;
+    z-index: 999;
+}
+
+.modal-background {
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+}
+
+.modal-card {
+    border-radius: var(--border-radius);
+    z-index: 1000;
+    max-width: 700px;
+    width: 700px;
+    height: 536.13px;
+    margin: 0 auto;
+}
+
+.modal-card-head {
+    background-color: var(--color-2);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-bottom: none;
+}
+
+.modal-card-title {
+    color: var(--color-4);
+    font-weight: var(--font-weight-server);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.modal-card-body {
+    background-color: rgb(247 247 247 / 95%);
+    backdrop-filter: blur(5px);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    padding: 10px 25px;
+}
+
+/* DEV selection cards */
+.body__containers {
+    display: grid;
+    grid-template-columns: 324.93px 324.93px;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px 20px;
+}
+
+.cont {
+    position: relative;
+    display: block;
+    width: 324.93px;
+    height: 440px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cont:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+    transition: all 0.3s ease;
+}
+
+.cont:hover:after {
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+.cont:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.28);
+}
+
+.container__a {
+    background: center/cover no-repeat url('/Image/177.webp');
+}
+
+.container__b {
+    background: center/cover no-repeat url('/Image/236.webp');
+}
+
+.dev__info {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    color: #fff;
+}
+
+.dev__info h2 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.dev__features {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 8px 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.25s ease, transform 0.3s ease;
+    margin-top: 0;
+    justify-content: center;
+    align-content: end;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.cont:hover .dev__features {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dev__features span {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    will-change: transform, backdrop-filter;
+}
+
+@media screen and (max-width: 768px) {
+    .body__containers { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: 440px 440px;
+    }
+    .cont { 
+        width: 100%;
+        height: 440px; 
+    }
+    .dev__info h2 { font-size: 40px; }
+    .modal-card {
+        width: 90%;
+        height: auto;
+        max-height: 90vh;
+    }
+}
+
+.delete {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.delete:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+
+* {
+    scrollbar-width: none;
+}
+
+* {
+    -ms-overflow-style: none;
+}
+
+.modal-card-body {
+    overflow: hidden;
+}
+
+body {
+    overflow-y: auto;
+}
+
+.download-options {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    justify-content: space-between;
+}
+
+.download-option {
+    background: #fff;
+    border-radius: var(--border-radius);
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.download-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.download-option img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    object-fit: contain;
+}
+
+.download-option p {
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.download-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.modal-card-body .content p {
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--color-1);
+}
+
+.download-option p {
+    font-weight: var(--font-weight-server) !important;
+    font-size: var(--font-small) !important;
+}
+
+.install-instructions {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.install-instructions li {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.content ol {
+    margin-left: 0em !important;
+}
+
+/* Добавляем отдельную кнопку "Начать играть" в шапке для мобильной версии */
+.header__play-btn {
+    display: none;
+}
+
+@media screen and (max-width: 1405px) {
+    .header__play-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        background-color: var(--color-2);
+        color: var(--color-4) !important;
+        border-radius: var(--border-radius);
+        font-size: 14px;
+        font-weight: var(--font-weight-link);
+        transition: all 0.2s ease;
+        box-shadow: 0 0 10px var(--color-3);
+        margin-right: 15px;
+    }
+    
+    .header__play-btn i {
+        color: var(--color-4) !important;
+    }
+    
+    .header__play-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .header__play-btn:active {
+        transform: scale(0.95);
+    }
+}
+
+
+/* Стили для всплывающих уведомлений */
+.notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: 2px solid;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    min-width: 300px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notification.show {
+    top: 30px;
+    animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notification.hide {
+    top: -100px;
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notification.success {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.notification.error {
+    border-color: #f44336;
+    background: rgba(244, 67, 54, 0.1);
+}
+
+.notification.warning {
+    border-color: #ff9800;
+    background: rgba(255, 152, 0, 0.1);
+}
+
+.notification.info {
+    border-color: #2196F3;
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.notification-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+@keyframes slideDown {
+    from {
+        top: -100px;
+        opacity: 0;
+    }
+    to {
+        top: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        top: 30px;
+        opacity: 1;
+    }
+    to {
+        top: -100px;
+        opacity: 0;
+    }
+}
+
+/* System requirements */
+.system__container {
+    position: relative;
+    margin: 70px auto 80px;
+    max-width: 1200px;
+}
+
+.system__container:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+    top: 28px;
+    width: 100%;
+    height: 55px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: var(--border-radius);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.25));
+    z-index: 0;
+    opacity: 0;
+    transform-origin: top center;
+    transition: transform 1s cubic-bezier(.2,.7,.2,1), opacity 1s cubic-bezier(.2,.7,.2,1);
+    transition-delay: 0s;
+}
+
+.system__container.bg-visible:before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.title__content {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+    padding: 40px 0 20px;
+}
+
+.title__content p {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #fff;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.systems__content {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.systems__content .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+}
+
+.systems__content .col {
+    backdrop-filter: blur(3px);
+}
+
+.description.sys {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.block {
+    background: rgba(0,0,0,.35);
+    border-radius: var(--border-radius);
+    padding: 20px 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+
+.block table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.block .td-1 {
+    color: #cfcfcf;
+    padding: 10px 0;
+}
+
+.block .td-2 {
+    color: #fff;
+    text-align: right;
+    padding: 10px 0;
+}
+
+/* Reveal animations */
+.reveal-top, .reveal-left, .reveal-right {
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: transform 0.45s ease-out, opacity 0.45s ease-out;
+}
+
+.reveal-left {
+    transform: translateX(-50px);
+}
+
+.reveal-right {
+    transform: translateX(50px);
+}
+
+.is-visible.reveal-top {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.is-visible.reveal-left,
+.is-visible.reveal-right {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media screen and (max-width: 900px) {
+    .systems__content .row { grid-template-columns: 1fr; }
+    .reveal-right { transform: translateX(50px); }
+}
+
+/* DEV selection cards */
+.body__containers {
+    display: grid;
+    grid-template-columns: 324.93px 324.93px;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px 20px;
+}
+
+.cont {
+    position: relative;
+    display: block;
+    width: 324.93px;
+    height: 440px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cont:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+    transition: all 0.3s ease;
+}
+
+.cont:hover:after {
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+.cont:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.28);
+}
+
+.container__a {
+    background: center/cover no-repeat url('/Image/177.webp');
+}
+
+.container__b {
+    background: center/cover no-repeat url('/Image/236.webp');
+}
+
+.dev__info {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    color: #fff;
+}
+
+.dev__info h2 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.dev__features {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 8px 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.25s ease, transform 0.3s ease;
+    margin-top: 0;
+    justify-content: center;
+    align-content: end;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.cont:hover .dev__features {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dev__features span {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    will-change: transform, backdrop-filter;
+}
+
+@media screen and (max-width: 768px) {
+    .body__containers { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: 440px 440px;
+    }
+    .cont { 
+        width: 100%;
+        height: 440px; 
+    }
+    .dev__info h2 { font-size: 40px; }
+    .modal-card {
+        width: 90%;
+        height: auto;
+        max-height: 90vh;
+    }
+}
+
+.delete {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.delete:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+
+* {
+    scrollbar-width: none;
+}
+
+* {
+    -ms-overflow-style: none;
+}
+
+.modal-card-body {
+    overflow: hidden;
+}
+
+body {
+    overflow-y: auto;
+}
+
+.download-options {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+    justify-content: space-between;
+}
+
+.download-option {
+    background: #fff;
+    border-radius: var(--border-radius);
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.download-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.download-option img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    object-fit: contain;
+}
+
+.download-option p {
+    color: var(--color-1);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.download-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.modal-card-body .content p {
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--color-1);
+}
+
+.download-option p {
+    font-weight: var(--font-weight-server) !important;
+    font-size: var(--font-small) !important;
+}
+
+.install-instructions {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.install-instructions li {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.content ol {
+    margin-left: 0em !important;
+}
+
+.modal {
+    transition: opacity 0.3s ease;
+    z-index: 999;
+}
+
+.modal-background {
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+}
+
+.modal-card {
+    border-radius: var(--border-radius);
+    z-index: 1000;
+    max-width: 700px;
+    width: 700px;
+    height: 536.13px;
+    margin: 0 auto;
+}
+
+.modal-card-head {
+    background-color: var(--color-2);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-bottom: none;
+}
+
+.modal-card-title {
+    color: var(--color-4);
+    font-weight: var(--font-weight-server);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.modal-card-body {
+    background-color: rgb(247 247 247 / 95%);
+    backdrop-filter: blur(5px);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    padding: 10px 25px;
+}
+
+/* Дополнительное пространство для прокрутки */
+.scroll-spacer {
+    height: 26vh;
+    width: 100%;
 }
