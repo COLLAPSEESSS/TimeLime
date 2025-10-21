@@ -68,7 +68,7 @@ if (typeof window !== 'undefined') {
 
 // Initialize preloader immediately (like in original)
 let preloaderStartTime = new Date().getTime();
-
+const MIN_PRELOADER_TIME = 500;
 
 class Preloader {
   constructor() {
