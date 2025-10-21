@@ -221,7 +221,8 @@ html {
     border-radius: var(--border-radius);
     transition: all 0.2s ease;
     flex: 0 0 calc(25% - 30px);
-    min-width: 50px;
+    min-width: 350px;
+    max-width: 400px;
 }
 
 .server__inner:hover {
@@ -298,7 +299,7 @@ html {
     flex-direction: column;
     gap: 40px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -317,7 +318,7 @@ html {
 @media screen and (max-width: 1200px) {
     .servers {
         margin: 0 auto;
-        max-width: 800px;
+        max-width: 900px;
     }
 }
 
