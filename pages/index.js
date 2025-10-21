@@ -340,36 +340,26 @@ html {
         flex-direction: column;
         gap: 15px;
         margin: 10px 0;
-        align-items: flex-start;
     }
     
     .server__stats {
         flex-wrap: wrap;
         gap: 8px;
-        width: 100%;
-        justify-content: flex-start;
     }
     
     .server__stat {
         font-size: 12px;
-        padding: 6px 10px;
-        white-space: nowrap;
-        flex-shrink: 0;
+        padding: 4px 8px;
     }
     
     .server__players {
         font-size: 14px;
-        justify-content: flex-start;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 5px;
+        justify-content: center;
     }
     
     .server__progress {
         height: 15px;
         margin-top: 10px;
-        width: 100%;
     }
 }
 
@@ -389,36 +379,21 @@ html {
         line-height: 1.3;
     }
     
-    .server__info-stats {
-        gap: 12px;
-        align-items: flex-start;
-    }
-    
     .server__stats {
         gap: 6px;
-        width: 100%;
-        justify-content: flex-start;
     }
     
     .server__stat {
         font-size: 11px;
-        padding: 4px 8px;
-        white-space: nowrap;
-        flex-shrink: 0;
+        padding: 3px 6px;
     }
     
     .server__players {
         font-size: 13px;
-        justify-content: flex-start;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 5px;
     }
     
     .server__progress {
         height: 12px;
-        width: 100%;
     }
 }
 
@@ -663,38 +638,27 @@ html {
         line-height: 1.2;
     }
     
-    .server__info-stats {
-        gap: 10px;
-        align-items: flex-start;
-    }
-    
-    .server__stats {
-        gap: 4px;
-        width: 100%;
-        justify-content: flex-start;
-    }
-    
     .server__stat {
         font-size: 10px;
-        padding: 3px 6px;
-        white-space: nowrap;
-        flex-shrink: 0;
+        padding: 2px 5px;
         display: flex;
         align-items: center;
     }
     
     .server__players {
         font-size: 12px;
-        justify-content: flex-start;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 5px;
     }
     
     .server__progress {
         height: 10px;
-        width: 100%;
+    }
+    
+    .server__info-stats {
+        gap: 10px;
+    }
+    
+    .server__stats {
+        gap: 4px;
     }
 }
 
