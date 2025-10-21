@@ -318,7 +318,7 @@ html {
     .servers {
         margin: 0 auto;
         max-width: 100%;
-        padding: 0 10px;
+        padding: 0 5px;
     }
     
     .main__content {
@@ -327,7 +327,7 @@ html {
     
     .server__inner {
         min-width: 100%;
-        padding: 20px;
+        padding: 25px;
         margin-bottom: 15px;
     }
     
@@ -376,12 +376,12 @@ html {
 
 @media screen and (max-width: 480px) {
     .servers {
-        padding: 0 5px;
+        padding: 0 2px;
         margin: 15px auto;
     }
     
     .server__inner {
-        padding: 15px;
+        padding: 20px;
         margin-bottom: 10px;
     }
     
@@ -652,12 +652,12 @@ html {
     }
 
     .servers {
-        padding: 0;
+        padding: 0 1px;
         margin: 10px auto;
     }
     
     .server__inner {
-        padding: 12px;
+        padding: 18px;
         margin-bottom: 8px;
     }
     
