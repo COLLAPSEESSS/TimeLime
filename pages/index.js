@@ -49,29 +49,48 @@ function ShowNotification(message, type = 'success', duration = 2000, iconSvg = 
   }, duration);
 }
 
-// Функция для подключения к серверу
-function connectToServer(connectString) {
-  // Копируем строку подключения в буфер обмена
-  navigator.clipboard.writeText(connectString).then(() => {
-    ShowNotification("IP-адрес скопирован!", "success", 2000, "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z");
-    console.log("IP-адрес скопирован в буфер обмена!");
-  }).catch(err => {
-    console.error('Ошибка при копировании:', err);
-    // Fallback для старых браузеров
-    const textArea = document.createElement('textarea');
-    textArea.value = connectString;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-    ShowNotification("IP-адрес скопирован!", "success", 2000, "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z");
-    console.log("IP-адрес скопирован в буфер обмена!");
+// Функция для копирования IP
+function copyToClipboard(text) {
+  return new Promise((resolve, reject) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text)
+        .then(() => resolve())
+        .catch(reject);
+    } else {
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        textArea.remove();
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    }
   });
 }
 
-// Делаем функцию доступной глобально
+// Функция для подключения к серверу
+async function connectToServer(connectString) {
+  try {
+    await copyToClipboard(connectString);
+    ShowNotification("IP-адрес скопирован!", "success", 2000, "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z");
+  } catch (error) {
+    console.error('Ошибка при копировании:', error);
+    ShowNotification("Ошибка при копировании IP", "error", 2000);
+  }
+}
+
+// Делаем функции доступными глобально
 if (typeof window !== 'undefined') {
   window.connectToServer = connectToServer;
+  window.copyToClipboard = copyToClipboard;
 }
 
 export default function Home() {
