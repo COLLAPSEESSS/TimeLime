@@ -66,50 +66,51 @@ if (typeof window !== 'undefined') {
   window.connectToServer = copyTextToClipboard;
 }
 
-// Initialize preloader immediately (like in original)
 let preloaderStartTime = new Date().getTime();
 const MIN_PRELOADER_TIME = 500;
+let preloader;
 
-class Preloader {
-  constructor() {
-    this.preloader = document.createElement('div');
-    this.preloader.className = 'preloader';
-    this.preloader.innerHTML = `
-      <div class="preloader__content">
-        <div class="preloader__spinner"></div>
-        <div class="preloader__text">Загрузка серверов...</div>
-      </div>
-    `;
-    document.body.appendChild(this.preloader);
-  }
+document.addEventListener('DOMContentLoaded', function() {
+    class Preloader {
+        constructor() {
+            this.preloader = document.createElement('div');
+            this.preloader.className = 'preloader';
+            this.preloader.innerHTML = `
+                <div class="preloader__content">
+                    <div class="preloader__spinner"></div>
+                    <div class="preloader__text">Загрузка серверов...</div>
+                </div>
+            `;
+            document.body.appendChild(this.preloader);
+        }
 
-  hide() {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
+        hide() {
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+            
+            this.preloader.classList.add('preloader--hidden');
+            setTimeout(() => {
+                this.preloader.remove();
+            }, 500);
+        }
     }
-    
-    this.preloader.classList.add('preloader--hidden');
-    setTimeout(() => {
-      this.preloader.remove();
-    }, 500);
-  }
-}
 
-const preloader = new Preloader();
+    preloader = new Preloader();
+});
 
-// Function to hide preloader with minimum time
 function hidePreloaderWithMinTime() {
-  const currentTime = new Date().getTime();
-  const elapsedTime = currentTime - preloaderStartTime;
-  
-  if (elapsedTime >= MIN_PRELOADER_TIME) {
-    preloader.hide();
-  } else {
-    const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
-    setTimeout(() => {
-      preloader.hide();
-    }, remainingTime);
-  }
+    const currentTime = new Date().getTime();
+    const elapsedTime = currentTime - preloaderStartTime;
+    
+    if (elapsedTime >= MIN_PRELOADER_TIME) {
+        preloader.hide();
+    } else {
+        const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
+        setTimeout(() => {
+            preloader.hide();
+        }, remainingTime);
+    }
 }
 
 export default function Home() {
@@ -396,6 +397,7 @@ export default function Home() {
     function fetchFreshData() {
       const timeoutId = setTimeout(() => {
         console.log('Превышено время ожидания ответа от сервера (5 секунд). Перезагрузка страницы...');
+        hidePreloaderWithMinTime();
         window.location.reload();
       }, 5000);
       
