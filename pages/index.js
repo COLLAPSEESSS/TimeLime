@@ -66,11 +66,14 @@ if (typeof window !== 'undefined') {
   window.connectToServer = copyTextToClipboard;
 }
 
-let preloaderStartTime = new Date().getTime();
-const MIN_PRELOADER_TIME = 500;
-let preloader;
 
-document.addEventListener('DOMContentLoaded', function() {
+export default function Home() {
+  useEffect(() => {
+    // Initialize preloader
+    let preloaderStartTime = new Date().getTime();
+    const MIN_PRELOADER_TIME = 500;
+    let preloader;
+
     class Preloader {
         constructor() {
             this.preloader = document.createElement('div');
@@ -97,24 +100,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     preloader = new Preloader();
-});
 
-function hidePreloaderWithMinTime() {
-    const currentTime = new Date().getTime();
-    const elapsedTime = currentTime - preloaderStartTime;
-    
-    if (elapsedTime >= MIN_PRELOADER_TIME) {
-        preloader.hide();
-    } else {
-        const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
-        setTimeout(() => {
+    function hidePreloaderWithMinTime() {
+        const currentTime = new Date().getTime();
+        const elapsedTime = currentTime - preloaderStartTime;
+        
+        if (elapsedTime >= MIN_PRELOADER_TIME) {
             preloader.hide();
-        }, remainingTime);
+        } else {
+            const remainingTime = MIN_PRELOADER_TIME - elapsedTime;
+            setTimeout(() => {
+                preloader.hide();
+            }, remainingTime);
+        }
     }
-}
 
-export default function Home() {
-  useEffect(() => {
     // Initialize modal functionality
     function openModal($el) {
       $el.classList.add('is-active');
