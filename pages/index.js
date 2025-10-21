@@ -344,48 +344,28 @@ export default function Home() {
 
       // Add reveal animations
       const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
-      const titleElement = systemContainer.querySelector('.title__content');
-      let titleTimeout = null;
-      let lastScrollY = window.scrollY;
-      
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          const currentScrollY = window.scrollY;
-          const scrollingDown = currentScrollY > lastScrollY;
-          lastScrollY = currentScrollY;
-          
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
-            
-            // Специальная логика для заголовка с debounce
             if (entry.target.classList.contains('title__content')) {
-              if (titleTimeout) {
-                clearTimeout(titleTimeout);
-              }
-              titleTimeout = setTimeout(() => {
-                systemContainer.classList.add('bg-visible');
-              }, 50);
+              systemContainer.classList.add('bg-visible');
             }
           } else {
-            // Убираем класс только если скроллим вверх
-            if (!scrollingDown) {
-              entry.target.classList.remove('is-visible');
-              
-              // Специальная логика для заголовка с debounce
-              if (entry.target.classList.contains('title__content')) {
-                if (titleTimeout) {
-                  clearTimeout(titleTimeout);
-                }
-                titleTimeout = setTimeout(() => {
+            // Добавляем задержку перед скрытием для плавности
+            setTimeout(() => {
+              if (!entry.isIntersecting) {
+                entry.target.classList.remove('is-visible');
+                if (entry.target.classList.contains('title__content')) {
                   systemContainer.classList.remove('bg-visible');
-                }, 50);
+                }
               }
-            }
+            }, 100);
           }
         });
       }, {
-        threshold: 0.3,
-        rootMargin: '0px 0px -30% 0px'
+        threshold: 0.2,
+        rootMargin: '0px 0px -20% 0px'
       });
 
       revealEls.forEach((el) => revealObserver.observe(el));
