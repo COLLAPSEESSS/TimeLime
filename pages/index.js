@@ -346,12 +346,28 @@ export default function Home() {
       const revealEls = systemContainer.querySelectorAll('.reveal-top, .reveal-left, .reveal-right');
       const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
+          // Используем debounce-эффект для предотвращения частых изменений состояния
           if (entry.isIntersecting) {
+            // Если элемент видим, сразу добавляем класс
             entry.target.classList.add('is-visible');
             if (entry.target.classList.contains('title__content')) {
               systemContainer.classList.add('bg-visible');
             }
+            // Сохраняем состояние элемента
+            entry.target.dataset.wasVisible = 'true';
           } else {
+            // Проверяем, был ли элемент видимым ранее
+            if (entry.target.dataset.wasVisible === 'true') {
+              // Сбрасываем состояние
+              entry.target.dataset.wasVisible = 'false';
+
+              // Если элемент вышел из зоны видимости, удаляем класс
+              entry.target.classList.remove('is-visible');
+              if (entry.target.classList.contains('title__content')) {
+                systemContainer.classList.remove('bg-visible');
+              }
+            }
+          }
             // Добавляем задержку перед скрытием для плавности
             setTimeout(() => {
               if (!entry.isIntersecting) {
